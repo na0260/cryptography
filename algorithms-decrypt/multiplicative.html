@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Multiplicative Cipher Decryption</title>
+    <script>
+      function decrypt() {
+        const ciphertext = document.getElementById('ciphertext').value.toUpperCase().replace(/[^A-Z]/g, '');
+        const key = parseInt(document.getElementById('key').value);
+        const plaintext = multiplicativeDecipher(ciphertext, key);
+        
+      }
+
+      function multiplicativeDecipher(ciphertext, key) {
+        let plaintext = '';
+        const inverse = modInverse(key, 26);
+
+        for (let i = 0; i < ciphertext.length; i++) {
+          const cipherNum = ciphertext.charCodeAt(i) - 65;
+          const plainNum = (cipherNum*inverse)%26;
+          const plainChar = String.fromCharCode(plainNum + 65);
+          plaintext += plainChar;
+        }
+
+        return plaintext;
+      }
+
+      function modInverse(a, m) {
+        a = a % m;
+        for (let x = 1; x < m; x++) {
+          if ((a * x) % m === 1) {
+            return x;
+          }
+        }
+        return 1;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Multiplicative Cipher Decryption</h1>
+    <label for="ciphertext">Ciphertext:</label>
+    <input type="text" id="ciphertext"><br><br>
+    <label for="key">Key (must be coprime with 26):</label>
+    <input type="text" id="key"><br><br>
+    <button onclick="decrypt()">Decrypt</button><br><br>
+    <label for="plaintext">Plaintext:</label>
+    <input type="text" id="plaintext" readonly>
+  </body>
+</html>

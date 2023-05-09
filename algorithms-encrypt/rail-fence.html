@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rail Fence Cipher</title>
+    <script>
+      function encrypt() {
+        const plaintext = document.getElementById('plaintext').value.toUpperCase();
+        const key = parseInt(document.getElementById('key').value);
+        const ciphertext = railFenceCipher(plaintext, key);
+        document.getElementById('ciphertext').value = ciphertext;
+      }
+
+      function railFenceCipher(plaintext, key) {
+        let ciphertext = '';
+        const numRails = key;
+        const railMatrix = new Array(numRails).fill().map(() => new Array(plaintext.length).fill('.'));
+        let rail = 0;
+        let dir = 1;
+
+        for (let i = 0; i < plaintext.length; i++) {
+          railMatrix[rail][i] = plaintext.charAt(i);
+          rail += dir;
+          if (rail === 0 || rail === numRails - 1) {
+            dir = -dir;
+          }
+        }
+
+        for (let i = 0; i < numRails; i++) {
+          for (let j = 0; j < plaintext.length; j++) {
+            if (railMatrix[i][j] !== '.') {
+              ciphertext += railMatrix[i][j];
+            }
+          }
+        }
+
+        return ciphertext;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Rail Fence Cipher</h1>
+    <label for="plaintext">Plaintext:</label>
+    <input type="text" id="plaintext"><br><br>
+    <label for="key">Key:</label>
+    <input type="text" id="key"><br><br>
+    <button onclick="encrypt()">Encrypt</button><br><br>
+    <label for="ciphertext">Ciphertext:</label>
+    <input type="text" id="ciphertext" readonly>
+  </body>
+</html>

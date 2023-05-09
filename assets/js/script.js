@@ -117,11 +117,10 @@ function rail_fence(plaintext, key) {
 function rail_fence_d(ciphertext, key) {
     var plaintext = "";
 
-    var railLengths = new Array(key).fill(0); // initialize an array to keep track of the length of each rail
-    var currentRail = 0; // start at the first rail
-    var direction = 1; // start moving down
+    var railLengths = new Array(key).fill(0);
+    var currentRail = 0;
+    var direction = 1;
 
-    // iterate through the ciphertext and update the length of each rail
     for (var i = 0; i < ciphertext.length; i++) {
         railLengths[currentRail]++;
         currentRail += direction;
@@ -130,16 +129,14 @@ function rail_fence_d(ciphertext, key) {
         }
     }
 
-    var railOffsets = new Array(key).fill(0); // initialize an array to keep track of the offset of each rail
-    var offset = 0; // start at the beginning of the ciphertext
+    var railOffsets = new Array(key).fill(0);
+    var offset = 0;
 
-    // iterate through the rail offsets and update the offset of each rail
     for (var i = 0; i < key; i++) {
         railOffsets[i] = offset;
         offset += railLengths[i];
     }
 
-    // iterate through the ciphertext and retrieve the plaintext by following the rail pattern
     for (var i = 0; i < ciphertext.length; i++) {
         var railIndex = getRailIndex(i, key);
         var railOffset = railOffsets[railIndex];
@@ -154,7 +151,6 @@ function getRailIndex(position, key) {
     var currentRail = 0;
     var direction = 1;
 
-    // iterate through the rails to find the rail at the given position
     for (var i = 0; i < position; i++) {
         currentRail += direction;
         if (currentRail === key - 1 || currentRail === 0) {

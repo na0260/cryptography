@@ -29,7 +29,7 @@ function dec() {
         rail_fence_d(ciphertext_d, key_d);
     }
     if ("4-d" == cipher_d) {
-        vigenere_d();
+        vigenere_d(ciphertext_d, key_d);
     }
 }
 
@@ -73,7 +73,7 @@ function autokey(plaintext, key) {
     const m = 26;
     let k = key.toUpperCase();
     k = k + plaintext;
-    k = k.slice(0, -1);
+    k = k.slice(0, plaintext.length);
     for (let i = 0; i < plaintext.length; i++) {
         const charCode = plaintext.charCodeAt(i) - 65;
         const keyChar = i < k.length ? k.charCodeAt(i) - 65 : ciphertext.charCodeAt(i - k.length) - 65;
@@ -159,4 +159,57 @@ function getRailIndex(position, key) {
     }
 
     return currentRail;
+
+}
+
+function vigenere(plaintext, key) {
+    let k = key.toUpperCase().replace(/[^A-Z]/g, '');
+    let ciphertext = '';
+    let keyIndex = 0;
+
+    for (let i = 0; i < plaintext.length; i++) {
+        const plainChar = plaintext.charAt(i);
+        if (plainChar === ' ') {
+            ciphertext += ' ';
+            continue;
+        }
+
+        const keyChar = k.charAt(keyIndex % k.length);
+        const keyNum = keyChar.charCodeAt(0) - 65;
+        const shift = keyNum % 26;
+
+        const plainNum = plainChar.charCodeAt(0) - 65;
+        const cipherNum = (plainNum + shift) % 26;
+        const cipherChar = String.fromCharCode(cipherNum + 65);
+        ciphertext += cipherChar;
+
+        keyIndex++;
+    }
+    document.getElementById("ct").value = ciphertext;
+}
+
+function vigenere_d(ciphertext, key) {
+    let k = key.toUpperCase().replace(/[^A-Z]/g, '');
+    let plaintext = '';
+    let keyIndex = 0;
+
+    for (let i = 0; i < ciphertext.length; i++) {
+        const cipherChar = ciphertext.charAt(i);
+        if (cipherChar === ' ') {
+            plaintext += ' ';
+            continue;
+        }
+
+        const keyChar = k.charAt(keyIndex % k.length);
+        const keyNum = keyChar.charCodeAt(0) - 65;
+        const shift = keyNum % 26;
+
+        const cipherNum = cipherChar.charCodeAt(0) - 65;
+        const plainNum = (cipherNum - shift + 26) % 26;
+        const plainChar = String.fromCharCode(plainNum + 65);
+        plaintext += plainChar;
+
+        keyIndex++;
+    }
+    document.getElementById('pt-d').value = plaintext;
 }
